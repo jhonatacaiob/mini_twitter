@@ -8,3 +8,9 @@ class CreateUserView(CreateAPIView):
     model = User
     permission_classes = [permissions.AllowAny]
     serializer_class = UserSerializer
+
+
+def sample_view(request):
+    current_user = request.user
+    if current_user.is_authenticated:
+        print(current_user)
