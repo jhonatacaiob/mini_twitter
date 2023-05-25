@@ -6,7 +6,7 @@ from api.pagination import PostPagination
 from api.serializers import PostSerializer, UserSerializer
 
 from .models import Post
-
+from .filters import PostFilter
 
 class CreateUserView(CreateAPIView):
     model = User
@@ -19,6 +19,7 @@ class PostView(ListCreateAPIView):
     serializer_class = PostSerializer
     permission_classes = (permissions.IsAuthenticated,)
     pagination_class = PostPagination
+    filterset_class = PostFilter
 
     def get_queryset(self):
         user_id = self.request.user.id
