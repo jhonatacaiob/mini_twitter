@@ -5,8 +5,9 @@ from rest_framework.generics import CreateAPIView, ListCreateAPIView
 from api.pagination import PostPagination
 from api.serializers import PostSerializer, UserSerializer
 
-from .models import Post
 from .filters import PostFilter
+from .models import Post
+
 
 class CreateUserView(CreateAPIView):
     model = User
