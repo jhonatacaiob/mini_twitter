@@ -25,7 +25,7 @@ erDiagram
 
     POST {
         int id pk
-        int user_id pk
+        int user_id fk
         string content
         timestamps created_at
     }
