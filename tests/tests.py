@@ -24,8 +24,8 @@ class CreateUserTestCase(TestCase):
 
         self.assertEqual(response.status_code, 201)
         self.assertDictContainsSubset({'username': 'user1'}, response.data)
-    
-        user = User.objects.get(username='user1')
+
+        user = User.objects.get(id=response.data['id'])
 
         self.assertIsNotNone(user)
 
@@ -111,6 +111,9 @@ class PostsTestCase(TestCase):
 
         self.assertDictContainsSubset(expected_response, response.data)
 
+        post = Post.objects.get(id=response.data['id'])
+        self.assertIsNotNone(post)
+
     def test_should_return_list_of_posts_paginated(self):
         user = User.objects.get(username='user1')
 
@@ -133,12 +136,44 @@ class PostsTestCase(TestCase):
             any([row['user'] != 'user1' for row in response.data['results']])
         )
 
-    def test_should_return_posts_of_selected_users(self):
-        user = User.objects.get(username='user1')
+    def test_should_return_posts_of_one_selected_users(self):
+        current_user = User.objects.get(username='user1')
+        filtred_user = User.objects.get(username='user2')
 
-        request = self.factory.get('/api/posts/', {'user_id': '2'})
-        force_authenticate(request, user=user)
+        request = self.factory.get(
+            '/api/posts/', {'user_id': filtred_user.id}, format='json'
+        )
+        force_authenticate(request, user=current_user)
         response = self.view(request)
-        # self.assertTrue(
-        #     any([row['user'] != 'user1' for row in response.data['results']])
-        # )
+
+        self.assertTrue(
+            any([row['user'] == 'user2' for row in response.data['results']])
+        )
+
+    def test_should_return_posts_of_various_selected_users(self):
+        current_user = User.objects.get(username='user5')
+        filtred_users_id = [
+            User.objects.get(username='user1').id,
+            User.objects.get(username='user2').id,
+            User.objects.get(username='user3').id,
+        ]
+
+        request = self.factory.get(
+            '/api/posts/',
+            {
+                'user_id': filtred_users_id[0],
+                'user_id': filtred_users_id[1],
+                'user_id': filtred_users_id[2],
+            },
+        )
+        force_authenticate(request, user=current_user)
+        response = self.view(request)
+
+        self.assertTrue(
+            any(
+                [
+                    row['user'] not in filtred_users_id
+                    for row in response.data['results']
+                ]
+            )
+        )
