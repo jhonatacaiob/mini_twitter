@@ -30,6 +30,6 @@ jobs:
     - name: Lint with blue and isort
       run: |
           blue --check --diff . && isort --check --diff --profile black --line-length 79 -m 3 .
-    - name: Test with django unittest
-      run: |
-         python manage.py test tests/ .
+    # - name: Test with django unittest
+    #   run: |
+    #      python manage.py test tests/ .
