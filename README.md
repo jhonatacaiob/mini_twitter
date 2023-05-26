@@ -1,7 +1,10 @@
 # Mini twitter
 
-Replica minimalista do twitter feita com django, onde se tem uma versão minimalista do twitter.
+API Rest que busca simular o comportamento básico do twitter:
+    - Postar
+    - Ver posts de outros usuários
 
+A api foi construida com Django, e usa postgres como banco de dados
 
 
 Diagrama de entidade relacional da aplicação:
