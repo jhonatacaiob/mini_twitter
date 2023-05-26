@@ -29,7 +29,7 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with blue and isort
       run: |
-          blue --check --diff . && isort --check --diff -m 3 .
-    - name: Test with django unnittest
+          blue --check --diff . && isort --check --diff --profile black --line-length 79 -m 3 .
+    - name: Test with django unittest
       run: |
-         python .\manage.py test tests/
+         python manage.py test tests/ .
