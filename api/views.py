@@ -1,6 +1,9 @@
 from django.contrib.auth.models import User
+from django.forms.models import model_to_dict
 from rest_framework import permissions
 from rest_framework.generics import CreateAPIView, ListCreateAPIView
+from rest_framework.response import Response
+from rest_framework.status import HTTP_201_CREATED
 
 from api.pagination import PostPagination
 from api.serializers import PostSerializer, UserSerializer
@@ -32,4 +35,11 @@ class PostView(ListCreateAPIView):
 
         p = Post(content=content, user=user)
         p.save()
-        return p
+        return Response(
+            {
+                'id': p.id,
+                'content': p.content,
+                'user': p.user.username,
+            },
+            status=HTTP_201_CREATED,
+        )
