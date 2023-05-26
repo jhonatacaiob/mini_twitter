@@ -8,7 +8,7 @@ Diagrama de entidade relacional da aplicação:
 
 ```mermaid
 erDiagram
-    USER ||--o{ POST : make
+    USER ||--o{ POST : post
     USER {
         id int pk
         password string
