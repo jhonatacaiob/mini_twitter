@@ -9,13 +9,25 @@ on:
   pull_request:
     branches: [ "master" ]
 
-permissions:
-  contents: read
-
 jobs:
   build:
 
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          DATABASE_USER: postgres
+          DATABASE_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        # Executa de vez em quando uma rotina para saber se o banco não caiu
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
     - uses: actions/checkout@v3
@@ -30,6 +42,6 @@ jobs:
     - name: Lint with blue and isort
       run: |
           blue --check --diff . && isort --check --diff --profile black --line-length 79 -m 3 .
-    # - name: Test with django unittest
-    #   run: |
-    #      python manage.py test tests/ .
+    - name: Test with django unittest
+      run: |
+         python manage.py test tests/ .
