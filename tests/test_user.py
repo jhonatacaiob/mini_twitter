@@ -56,3 +56,10 @@ class CreateUserTestCase(TestCase):
         )
         response = self.view(request)
         self.assertEqual(response.status_code, 400)
+
+    def test_hashing_password(self):
+        password = 'password'
+        user = User(username='user1', password=make_password(password))
+        user.save()
+
+        self.assertNotEqual(password, user.password)
